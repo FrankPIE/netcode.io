@@ -126,7 +126,7 @@ void netcode_printf( int level, NETCODE_CONST char * format, ... )
 
 #endif // #if NETCODE_ENABLE_LOGGING
 
-void * netcode_default_allocate_function( void * context, uint64_t bytes )
+void * netcode_default_allocate_function( void * context, size_t bytes )
 {
     (void) context;
     return malloc( bytes );
@@ -610,7 +610,7 @@ void netcode_term()
 // ----------------------------------------------------------------
 
 #if NETCODE_PLATFORM == NETCODE_PLATFORM_WINDOWS
-typedef uint64_t netcode_socket_handle_t;
+typedef unsigned int netcode_socket_handle_t;
 #else // #if NETCODE_PLATFORM == NETCODE_PLATFORM_WINDOWS
 typedef int netcode_socket_handle_t;
 #endif // #if NETCODE_PLATFORM == NETCODe_PLATFORM_WINDOWS
@@ -1483,7 +1483,7 @@ struct netcode_connection_disconnect_packet_t
     uint8_t packet_type;
 };
 
-struct netcode_connection_payload_packet_t * netcode_create_payload_packet( int payload_bytes, void * allocator_context, void* (*allocate_function)(void*,uint64_t) )
+struct netcode_connection_payload_packet_t * netcode_create_payload_packet( int payload_bytes, void * allocator_context, void* (*allocate_function)(void*,size_t) )
 {
     netcode_assert( payload_bytes >= 0 );
     netcode_assert( payload_bytes <= NETCODE_MAX_PAYLOAD_BYTES );
@@ -1731,7 +1731,7 @@ void * netcode_read_packet( uint8_t * buffer,
                             uint8_t * allowed_packets, 
                             struct netcode_replay_protection_t * replay_protection, 
                             void * allocator_context, 
-                            void* (*allocate_function)(void*,uint64_t) )
+                            void* (*allocate_function)(void*, size_t) )
 {
     netcode_assert( sequence );
     netcode_assert( allowed_packets );
@@ -2290,7 +2290,7 @@ int netcode_read_connect_token( uint8_t * buffer, int buffer_length, struct netc
 struct netcode_packet_queue_t
 {
     void * allocator_context;
-    void * (*allocate_function)(void*,uint64_t);
+    void * (*allocate_function)(void*, size_t);
     void (*free_function)(void*,void*);
     int num_packets;
     int start_index;
@@ -2300,7 +2300,7 @@ struct netcode_packet_queue_t
 
 void netcode_packet_queue_init( struct netcode_packet_queue_t * queue, 
                                 void * allocator_context, 
-                                void * (*allocate_function)(void*,uint64_t), 
+                                void * (*allocate_function)(void*, size_t),
                                 void (*free_function)(void*,void*) )
 {
     if ( allocate_function == NULL )
@@ -2382,7 +2382,7 @@ struct netcode_network_simulator_packet_entry_t
 struct netcode_network_simulator_t
 {
     void * allocator_context;
-    void * (*allocate_function)(void*,uint64_t);
+    void * (*allocate_function)(void*, size_t);
     void (*free_function)(void*,void*);
     float latency_milliseconds;
     float jitter_milliseconds;
@@ -2396,7 +2396,7 @@ struct netcode_network_simulator_t
 };
 
 struct netcode_network_simulator_t * netcode_network_simulator_create( void * allocator_context, 
-                                                                       void * (*allocate_function)(void*,uint64_t), 
+                                                                       void * (*allocate_function)(void*, size_t),
                                                                        void (*free_function)(void*,void*) )
 {
     if ( allocate_function == NULL )
