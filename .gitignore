@@ -35,3 +35,10 @@ c/docker/netcode.io
 c/valgrind/netcode.io
 docs
 *.exe
+
+build*/
+.build*/
+
+!cmake/*
+!windows/lib/**/Debug
+!windows/lib/**/Release
