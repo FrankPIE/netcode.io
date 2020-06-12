@@ -31,16 +31,14 @@ concrete_set_global_properties(
 set(SRC_DIR ${CONCRETE_PROJECT_ROOT_DIRECTORY})
 
 if(MSVC)
-    set(toolset ${CMAKE_GENERATOR_TOOLSET})
+    set(toolset ${CONCRETE_GENERATOR_TOOLSET})
 
-    if ("_${toolset}" STREQUAL "_")
-        set(toolset ${CMAKE_GENERATOR})
+    if ("${CONCRETE_GENERATOR_TOOLSET}" STREQUAL "msvc142")
+        set(toolset "v142")
     endif()
 
-    if ("${toolset}" STREQUAL "Visual Studio 16 2019" OR "${toolset}" STREQUAL "vc142")
-        set(SODIUM_STATIC_DEBUG_LIB ${SRC_DIR}/windows/lib/${CONCRETE_PROJECT_COMPILER_TARGET}/Debug/v142/libsodium.lib)
-        set(SODIUM_STATIC_RELEASE_LIB ${SRC_DIR}/windows/lib/${CONCRETE_PROJECT_COMPILER_TARGET}/RELEASE/v142/libsodium.lib)
-    endif()
+    set(SODIUM_STATIC_DEBUG_LIB ${SRC_DIR}/windows/lib/${CONCRETE_PROJECT_COMPILER_TARGET}/Debug/${toolset}/libsodium.lib)
+    set(SODIUM_STATIC_RELEASE_LIB ${SRC_DIR}/windows/lib/${CONCRETE_PROJECT_COMPILER_TARGET}/Release/${toolset}/libsodium.lib)
 
     concrete_target(    
         IMPORTED
