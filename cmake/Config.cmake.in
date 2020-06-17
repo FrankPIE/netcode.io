@@ -1,0 +1,19 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+if (MSVC)
+    set(SODIUM_DIR ${PACKAGE_PREFIX_DIR}/libsodium/windows)
+
+    add_library(MSVC::Sodium STATIC IMPORTED)
+    set_property(TARGET MSVC::Sodium APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug Release)
+
+    target_include_directories(MSVC::Sodium INTERFACE ${SODIUM_DIR} ${SODIUM_DIR}/sodium)
+
+    set_target_properties(MSVC::Sodium PROPERTIES 
+        IMPORTED_LOCATION_DEBUG  ${SODIUM_DIR}/lib/@CONCRETE_PROJECT_COMPILER_TARGET@/Debug/${CMAKE_VS_PLATFORM_TOOLSET}/libsodium.lib
+        IMPORTED_LOCATION_RELEASE ${SODIUM_DIR}/lib/@CONCRETE_PROJECT_COMPILER_TARGET@/Release/${CMAKE_VS_PLATFORM_TOOLSET}/libsodium.lib
+    )
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/@CONCRETE_EXPORT_NAME@.cmake")
+check_required_components("@project_name@")
